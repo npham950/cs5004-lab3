@@ -47,7 +47,7 @@ public class TextDocumentImpl implements TextDocument {
                     currentLineWidth += tracker;
                     tracker = tracker + tracker;
                 }
-                newText += currWord.substring(tracker -  ) + " ";
+                newText += currWord.substring(numofLine * (columnWidth - 1) ) + " ";
                 i++;
                 continue;
             }
@@ -64,7 +64,7 @@ public class TextDocumentImpl implements TextDocument {
     }
 
     public static void main(String[] args) {
-        TextDocument text = new TextDocumentImpl("hahahahaha");
+        TextDocument text = new TextDocumentImpl("hahahahaha haha jij df ae");
         TextDocument t2 = text.wrap(5);
         System.out.println(t2.getText());
     }
