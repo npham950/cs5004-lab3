@@ -41,13 +41,13 @@ public class TextDocumentImpl implements TextDocument {
                 continue;
             } else if (currWord.length() > columnWidth) {
                 int numofLine = currWord.length()/columnWidth;
-                int tracker = columnWidth;
-                for (int j = 0; j <= numofLine; j++) {
-                    newText += currWord.substring(currentLineWidth, tracker - 1) + "-" + "\n";
-                    currentLineWidth += tracker - 1;
-                    tracker += (tracker - 1);
+                int tracker = columnWidth - 1;
+                for (int j = 0; j < numofLine; j++) {
+                    newText += currWord.substring(currentLineWidth, tracker) + "-" + "\n";
+                    currentLineWidth += tracker;
+                    tracker = tracker + tracker;
                 }
-                newText += currWord.substring(tracker) + " ";
+                newText += currWord.substring(tracker -  ) + " ";
                 i++;
                 continue;
             }
