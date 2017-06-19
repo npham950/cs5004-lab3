@@ -5,6 +5,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.List;
 public class TextDocumentImpl implements TextDocument {
     private String text;
     private ArrayList<String> wordArr;
@@ -39,12 +40,17 @@ public class TextDocumentImpl implements TextDocument {
                 currentLineWidth += currWord.length() + 1;
                 i++;
                 continue;
-            } else if (currWord.length() > columnWidth) {
+            }
+            if (currentLineWidth != 0) {
+                newText += newText;
+            }
+            if (currWord.length() > columnWidth) {
+                int thiscurr = 0;
                 int numofLine = currWord.length()/columnWidth;
                 int tracker = columnWidth - 1;
                 for (int j = 0; j < numofLine; j++) {
-                    newText += currWord.substring(currentLineWidth, tracker) + "-" + "\n";
-                    currentLineWidth += tracker;
+                    newText += currWord.substring(thiscurr, tracker) + "-" + "\n";
+                    thiscurr += tracker;
                     tracker = tracker + tracker;
                 }
                 newText += currWord.substring(numofLine * (columnWidth - 1) ) + " ";
@@ -63,8 +69,24 @@ public class TextDocumentImpl implements TextDocument {
         return null;
     }
 
+    private List<String> helper (String word, int columnWidth, int currentLineWidth) {
+        List<String> result = new ArrayList<>();
+        int beginIn = 0;
+        int endIn = columnWidth - 1 - currentLineWidth;
+        if (currentLineWidth > 0) {
+            result.add(word.substring(beginIn, endIn) + "-\n");
+            word = word.substring(endIn);
+        }
+        while (word.length() > columnWidth) {
+            result.add(word.substring(0, columnWidth - 1) + "-\n");
+            word = word.substring(columnWidth - 1);
+        }
+        result.add(word);
+        return result;
+    }
+
     public static void main(String[] args) {
-        TextDocument text = new TextDocumentImpl("hahahahaha haha jij df ae");
+        TextDocument text = new TextDocumentImpl("chau len ba chau vo jjgkkjhuu oiji kb gfd lknlkn kjjljb ");
         TextDocument t2 = text.wrap(5);
         System.out.println(t2.getText());
     }
