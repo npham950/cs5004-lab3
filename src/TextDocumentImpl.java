@@ -30,38 +30,50 @@ public class TextDocumentImpl implements TextDocument {
 
     @Override
     public TextDocument wrap(int columnWidth) {
-        int i = 0;
+        int wordTracker = 0;
         String newText = "";
         int currentLineWidth = 0;
-        while (i < wordArr.size()) {
-            String currWord = wordArr.get(i);
+        while (wordTracker < wordArr.size()) {
+            String currWord = wordArr.get(wordTracker);
+            if (currentLineWidth == columnWidth) {
+                newText += "\n";
+                currentLineWidth = 0;
+            }
             if (currentLineWidth + currWord.length() <= columnWidth) {
-                newText += currWord + " ";
-                currentLineWidth += currWord.length() + 1;
-                i++;
-                continue;
-            }
-            if (currentLineWidth != 0) {
-                newText += newText;
-            }
-            if (currWord.length() > columnWidth) {
-                int thiscurr = 0;
-                int numofLine = currWord.length()/columnWidth;
-                int tracker = columnWidth - 1;
-                for (int j = 0; j < numofLine; j++) {
-                    newText += currWord.substring(thiscurr, tracker) + "-" + "\n";
-                    thiscurr += tracker;
-                    tracker = tracker + tracker;
+                newText += currWord;
+                currentLineWidth += currWord.length();
+                if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                    newText += " ";
+                    currentLineWidth++;
                 }
-                newText += currWord.substring(numofLine * (columnWidth - 1) ) + " ";
-                i++;
+                wordTracker++;
+                continue;
+            } else {
+                if (currWord.length() <= columnWidth) {
+                    newText += "\n" + currWord;
+                    currentLineWidth = currWord.length();
+                    if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                        newText += " ";
+                        currentLineWidth++;
+                    }
+                }else  {
+                    List<String> divword = helper(currWord, columnWidth, currentLineWidth);
+                    while (divword.size() > 1) {
+                        newText += divword.get(0);
+                        divword.remove(0);
+                    }
+                    newText += divword.get(0);
+                    currentLineWidth = divword.get(0).length();
+                    if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                        newText += " ";
+                        currentLineWidth++;
+                    }
+                }
+                wordTracker++;
                 continue;
             }
-            newText += "\n";
-            currentLineWidth = 0;
         }
         return new TextDocumentImpl(newText);
-
     }
 
     @Override
@@ -86,8 +98,8 @@ public class TextDocumentImpl implements TextDocument {
     }
 
     public static void main(String[] args) {
-        TextDocument text = new TextDocumentImpl("chau len ba chau vo jjgkkjhuu oiji kb gfd lknlkn kjjljb ");
-        TextDocument t2 = text.wrap(5);
+        TextDocument text = new TextDocumentImpl("This is a random string.");
+        TextDocument t2 = text.wrap(6);
         System.out.println(t2.getText());
     }
 }
