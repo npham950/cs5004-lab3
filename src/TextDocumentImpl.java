@@ -1,8 +1,6 @@
 /**
  * Created by nypham on 6/17/17.
  */
-import javax.xml.bind.SchemaOutputResolver;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
@@ -30,6 +28,7 @@ public class TextDocumentImpl implements TextDocument {
 
     @Override
     public TextDocument wrap(int columnWidth) {
+        verifyInput(columnWidth);
         int wordTracker = 0;
         String newText = "";
         int currentLineWidth = 0;
@@ -42,7 +41,7 @@ public class TextDocumentImpl implements TextDocument {
             if (currentLineWidth + currWord.length() <= columnWidth) {
                 newText += currWord;
                 currentLineWidth += currWord.length();
-                if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                if (condition(currentLineWidth, columnWidth, wordTracker)) {
                     newText += " ";
                     currentLineWidth++;
                 }
@@ -52,7 +51,7 @@ public class TextDocumentImpl implements TextDocument {
                 if (currWord.length() <= columnWidth) {
                     newText += "\n" + currWord;
                     currentLineWidth = currWord.length();
-                    if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                    if (condition(currentLineWidth, columnWidth, wordTracker)) {
                         newText += " ";
                         currentLineWidth++;
                     }
@@ -64,7 +63,7 @@ public class TextDocumentImpl implements TextDocument {
                     }
                     newText += divword.get(0);
                     currentLineWidth = divword.get(0).length();
-                    if (currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1) {
+                    if (condition(currentLineWidth, columnWidth, wordTracker)) {
                         newText += " ";
                         currentLineWidth++;
                     }
@@ -78,7 +77,32 @@ public class TextDocumentImpl implements TextDocument {
 
     @Override
     public String commonSubText(TextDocument other) {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        String thisString = this.getText().toLowerCase();
+        String otherString = other.getText().toLowerCase();
+        int tracker = 0;
+        if (thisString.isEmpty() || otherString.isEmpty()) {
+            return "";
+        }
+        int [][] number = new int [thisString.length()][otherString.length()];
+        int maxLength = 0;
+        int index = 0;
+        for (index = 0; index < thisString.length(); index++) {
+            for (int j = 0; j < otherString.length(); j++) {
+                tracker = number[index][j];
+                if (thisString.charAt(index) == otherString.charAt(j)) {
+                    if (index == 0 || j == 0) {
+                        tracker = 1;
+                    }else {
+                        tracker = number[index-1][j-1] + 1;
+                    }
+                }
+                if (tracker > maxLength) {
+                    maxLength = tracker;
+                }
+            }
+        }
+        return this.getText().substring(index,maxLength);
     }
 
     private List<String> helper (String word, int columnWidth, int currentLineWidth) {
@@ -97,9 +121,19 @@ public class TextDocumentImpl implements TextDocument {
         return result;
     }
 
+    private boolean condition(int currentLineWidth, int columnWidth, int wordTracker) {
+        return currentLineWidth != columnWidth && wordTracker != wordArr.size() - 1;
+    }
+
+    private void verifyInput(int columnWidth) {
+        if (columnWidth < 2) {
+            throw new IllegalArgumentException("Invalid variable, the variable should be greater than 1");
+        }
+    }
+
     public static void main(String[] args) {
-        TextDocument text = new TextDocumentImpl("This is a random string.");
-        TextDocument t2 = text.wrap(6);
-        System.out.println(t2.getText());
+        TextDocument text = new TextDocumentImpl("Hello you");
+        TextDocument text2 = new TextDocumentImpl(  );
+        System.out.println(text.commonSubText(text2));
     }
 }
