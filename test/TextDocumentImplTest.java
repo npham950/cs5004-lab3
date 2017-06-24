@@ -80,68 +80,13 @@ public class TextDocumentImplTest {
         }
     }
 
-//    @Test
-//    public void testCommonSubText() throws Exception {
-//        Assert.assertEquals(" is a Thursday", doc3.commonSubtext(doc4));
-//        Assert.assertEquals(" is a Thursday", doc4.commonSubtext(doc3));
-//        Assert.assertEquals(" is a ", doc3.commonSubtext(doc1));
-//        Assert.assertEquals("", doc5.commonSubtext(doc1));
-//        Assert.assertEquals("abracadabra shazam", doc6.commonSubtext(doc8));
-//        Assert.assertEquals("abracadabra shazam", doc8.commonSubtext(doc6));
-    //}
+    @Test
+    public void testCommonSubText() throws Exception {
+        Assert.assertEquals(" is a Thursday", doc3.commonSubText(doc4));
+        Assert.assertEquals(" is a Thursday", doc4.commonSubText(doc3));
+        Assert.assertEquals(" is a ", doc3.commonSubText(doc1));
+        Assert.assertEquals("", doc5.commonSubText(doc1));
+        Assert.assertEquals("abracadabra shazam", doc6.commonSubText(doc8));
+        Assert.assertEquals("abracadabra shazam", doc8.commonSubText(doc6));
+    }
 }
-//    @Override
-//    public TextDocument wrap(int columnWidth) {
-//        int i = 0;
-//        String newText = "";
-//        int currentLineWidth = 0;
-//        while (i < wordArr.size()) {
-//            String currWord = wordArr.get(i);
-//            int condition = currentLineWidth + currWord.length();
-//            if (condition <= columnWidth) {
-//                newText += currWord;
-//                currentLineWidth += currWord.length();
-//                if (currentLineWidth < columnWidth - 1  && i != wordArr.size() - 1) {
-//                    newText += " ";
-//                    currentLineWidth += 1;
-//                }if (currentLineWidth == columnWidth && i != wordArr.size() - 1) {
-//                    newText += "\n";
-//                    currentLineWidth = 0;
-//                }
-//                i++;
-//                continue;
-//            } else if (currWord.length() <= columnWidth) {
-//                newText += "\n" + currWord;
-//                currentLineWidth = currWord.length();
-//                if (currentLineWidth < columnWidth - 1  && i != wordArr.size() - 1) {
-//                    newText += " ";
-//                    currentLineWidth += 1;
-//                }if (currentLineWidth == columnWidth && i != wordArr.size() - 1) {
-//                    newText += "\n";
-//                    currentLineWidth = 0;
-//                }
-//                i++;
-//                continue;
-//            }
-//            else if (condition > columnWidth && currentLineWidth < columnWidth - 1) {
-//                List<String> divword = helper(currWord, columnWidth, currentLineWidth);
-//                while (divword.size() > 1) {
-//                    newText += divword.get(0);
-//                    divword.remove(0);
-//                    currentLineWidth += divword.get(0).length() - 1;
-//                }
-//                newText += divword.get(0);
-//                currentLineWidth = divword.get(0).length();
-//                if (currentLineWidth < columnWidth - 1) {
-//                    newText += " ";
-//                    currentLineWidth += 1;
-//                }
-//                i++;
-//                continue;
-//            }
-//            newText += "\n";
-//            currentLineWidth = 0;
-//        }
-//        return new TextDocumentImpl(newText);
-//
-//    }

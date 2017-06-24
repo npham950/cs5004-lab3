@@ -77,32 +77,32 @@ public class TextDocumentImpl implements TextDocument {
 
     @Override
     public String commonSubText(TextDocument other) {
-        StringBuilder sb = new StringBuilder();
+        int index = 0;
+        int startIn = 0;
         String thisString = this.getText().toLowerCase();
         String otherString = other.getText().toLowerCase();
-        int tracker = 0;
         if (thisString.isEmpty() || otherString.isEmpty()) {
             return "";
         }
         int [][] number = new int [thisString.length()][otherString.length()];
         int maxLength = 0;
-        int index = 0;
-        for (index = 0; index < thisString.length(); index++) {
+        for (int i = 0; i < thisString.length(); i++) {
             for (int j = 0; j < otherString.length(); j++) {
-                tracker = number[index][j];
-                if (thisString.charAt(index) == otherString.charAt(j)) {
-                    if (index == 0 || j == 0) {
-                        tracker = 1;
+                if (thisString.charAt(i) == otherString.charAt(j)) {
+                    if (i == 0 || j == 0) {
+                        number [i][j] = 1;
                     }else {
-                        tracker = number[index-1][j-1] + 1;
+                        number[i][j] = number[i-1][j-1] + 1;
                     }
                 }
-                if (tracker > maxLength) {
-                    maxLength = tracker;
+                if (number [i][j] > maxLength) {
+                    maxLength = number [i][j];
+                    index = i;
                 }
             }
         }
-        return this.getText().substring(index,maxLength);
+        startIn = index - maxLength + 1;
+        return this.getText().substring(startIn, Math.min(index + 1, this.getText().length()));
     }
 
     private List<String> helper (String word, int columnWidth, int currentLineWidth) {
@@ -132,8 +132,8 @@ public class TextDocumentImpl implements TextDocument {
     }
 
     public static void main(String[] args) {
-        TextDocument text = new TextDocumentImpl("Hello you");
-        TextDocument text2 = new TextDocumentImpl(  );
+        TextDocument text = new TextDocumentImpl("Today is a Thursday");
+        TextDocument text2 = new TextDocumentImpl("This is a Thursday evening event");
         System.out.println(text.commonSubText(text2));
     }
 }
